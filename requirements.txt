@@ -1,30 +1,30 @@
 # Web Framework
-streamlit==1.31.0
-streamlit-autorefresh==1.0.1
+streamlit>=1.31.0
+streamlit-autorefresh>=1.0.1
 
 # Deep Learning & Computer Vision
 ultralytics>=8.3.0
-torch==2.0.1
-torchvision==0.15.2
-opencv-python==4.9.0.80
-pillow==10.2.0
+torch>=2.0.1
+torchvision>=0.15.2
+opencv-python>=4.9.0
+pillow>=10.2.0
 
 # Database
-pymongo==4.6.1
+pymongo>=4.6.1
 
 # Security & Authentication
-bcrypt==4.1.2
+bcrypt>=4.1.2
 
 # Data Processing
-numpy==1.26.3
-pandas==2.2.0
+numpy>=1.26.3
+pandas>=2.2.0
 
 # Visualization
-plotly==5.18.0
-matplotlib==3.8.2
+plotly>=5.18.0
+matplotlib>=3.8.2
 
 # Environment & Configuration
-python-dotenv==1.0.0
+python-dotenv>=1.0.0
 
 # Utilities
-python-dateutil==2.8.2
+python-dateutil>=2.8.2
