@@ -4,20 +4,77 @@ Modern AdminLTE-inspired real-time detection interface
 """
 
 import streamlit as st
-import cv2
-import numpy as np
-from datetime import datetime
-import time
-import config
-from utils.video_processor import WebcamProcessor
-from utils.verification import verify_detection_2layer, should_trigger_snapshot
-from database.user_manager import get_current_user_id
-from database.detection_manager import save_detection
-from alerts.email_service import send_alert_if_ready
+
+# Try to import webcam-related dependencies
+try:
+    import cv2
+    import numpy as np
+    from datetime import datetime
+    import time
+    import config
+    from utils.video_processor import WebcamProcessor
+    from utils.verification import verify_detection_2layer, should_trigger_snapshot
+    from database.user_manager import get_current_user_id
+    from database.detection_manager import save_detection
+    from alerts.email_service import send_alert_if_ready
+    WEBCAM_AVAILABLE = True
+except ImportError as e:
+    WEBCAM_AVAILABLE = False
+    IMPORT_ERROR = str(e)
 
 
 def show_webcam_page():
     """Display modern webcam streaming page with AdminLTE-inspired design."""
+    
+    # Check if webcam dependencies are available
+    if not WEBCAM_AVAILABLE:
+        st.markdown("""
+        <div style="
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.05) 100%);
+            border: 2px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            margin: 40px 0;
+        ">
+            <div style="font-size: 80px; margin-bottom: 20px;">📹❌</div>
+            <h2 style="
+                font-size: 2rem; 
+                font-weight: 800; 
+                color: #ef4444;
+                margin-bottom: 16px;
+            ">Webcam Not Supported on Streamlit Cloud</h2>
+            <p style="
+                font-size: 1.125rem; 
+                color: var(--text-secondary);
+                margin-bottom: 24px;
+                line-height: 1.6;
+            ">
+                The webcam feature requires local system access and cannot run on Streamlit Cloud.<br>
+                To use this feature, please run the application on your local computer.
+            </p>
+            <div style="
+                background: rgba(0, 0, 0, 0.2);
+                border-radius: 8px;
+                padding: 16px;
+                margin-top: 20px;
+            ">
+                <p style="
+                    color: var(--text-muted);
+                    font-size: 0.875rem;
+                    margin: 0;
+                ">
+                    💡 <strong>How to run locally:</strong><br>
+                    1. Clone this repository<br>
+                    2. Install dependencies: <code style="background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px;">pip install -r requirements.txt</code><br>
+                    3. Run: <code style="background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px;">streamlit run app.py</code>
+                </p>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.info("🔄 Try the **Image Upload** feature instead for wildlife detection on Streamlit Cloud!")
+        return
     
     user_id = get_current_user_id()
     
