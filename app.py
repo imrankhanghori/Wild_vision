@@ -47,23 +47,31 @@ def main():
         st.session_state['app_start_time'] = datetime.now()
     
     # === CHECK MONGODB CONNECTION ===
-    if not test_connection():
-        st.error("❌ MongoDB Connection Failed")
-        st.warning("""
-        **Please ensure MongoDB is running:**
-        1. Start MongoDB service: `mongod`
-        2. Verify connection at: `localhost:27017`
-        3. Refresh this page
-        """)
-        st.stop()
+    mongodb_available = test_connection()
     
-    # Initialize database (create indexes)
-    if 'db_initialized' not in st.session_state:
-        if initialize_database():
-            st.session_state['db_initialized'] = True
+    if not mongodb_available:
+        # Store MongoDB status in session state
+        st.session_state['mongodb_available'] = False
+        
+        # Show warning banner
+        st.warning("""
+        ⚠️ **Database Unavailable** - Running in demo mode without MongoDB.  
+        Features like user authentication, detection history, and alerts are disabled.  
+        
+        **To enable full features:**
+        - **Local:** Start MongoDB with `mongod` command
+        - **Cloud:** Set up MongoDB Atlas and add connection string to Streamlit secrets
+        """)
+    else:
+        st.session_state['mongodb_available'] = True
+        # Initialize database (create indexes)
+        if 'db_initialized' not in st.session_state:
+            if initialize_database():
+                st.session_state['db_initialized'] = True
     
     # === AUTHENTICATION CHECK ===
-    if not is_logged_in():
+    # Skip authentication if MongoDB is unavailable (demo mode)
+    if mongodb_available and not is_logged_in():
         show_auth_page()
         return
     

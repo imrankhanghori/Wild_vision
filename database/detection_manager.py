@@ -50,8 +50,8 @@ def save_detection(user_id, species, confidence_layer1, confidence_layer2,
         result = detections_collection.insert_one(detection_doc)
         return result.inserted_id
     
-    except Exception as e:
-        st.error(f"Error saving detection: {e}")
+    except Exception:
+        # Silently fail when DB unavailable
         return None
 
 
@@ -109,8 +109,8 @@ def get_recent_detections(user_id, limit=20):
         
         return detections
     
-    except Exception as e:
-        st.error(f"Error fetching detections: {e}")
+    except Exception:
+        # Silently fail when DB unavailable
         return []
 
 
@@ -140,8 +140,8 @@ def get_species_statistics(user_id):
         stats = {result['_id']: result['count'] for result in results}
         return stats
     
-    except Exception as e:
-        st.error(f"Error getting species statistics: {e}")
+    except Exception:
+        # Silently fail when DB unavailable
         return {}
 
 
@@ -167,8 +167,8 @@ def get_total_detections(user_id):
         })
         return count
     
-    except Exception as e:
-        st.error(f"Error counting detections: {e}")
+    except Exception:
+        # Silently fail when DB unavailable
         return 0
 
 
@@ -198,8 +198,8 @@ def get_detections_today(user_id):
         
         return detections
     
-    except Exception as e:
-        st.error(f"Error fetching today's detections: {e}")
+    except Exception:
+        # Silently fail when DB unavailable
         return []
 
 
@@ -222,8 +222,8 @@ def delete_detection(detection_id):
         result = detections_collection.delete_one({"_id": detection_id})
         return result.deleted_count > 0
     
-    except Exception as e:
-        st.error(f"Error deleting detection: {e}")
+    except Exception:
+        # Silently fail when DB unavailable
         return False
 
 
@@ -246,8 +246,8 @@ def get_detection_by_id(detection_id):
         detection = detections_collection.find_one({"_id": detection_id})
         return detection
     
-    except Exception as e:
-        st.error(f"Error fetching detection: {e}")
+    except Exception:
+        # Silently fail when DB unavailable
         return None
 
 
@@ -287,8 +287,8 @@ def get_detection_stats():
             'today_detections': today_count
         }
     
-    except Exception as e:
-        st.error(f"Error getting detection stats: {e}")
+    except Exception:
+        # Silently fail when DB unavailable
         return {
             'total_detections': 0,
             'unique_species': 0,

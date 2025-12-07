@@ -248,13 +248,19 @@ def is_logged_in():
 def get_current_user_id():
     """
     Get current user's ID.
+    Returns a demo ObjectId when running without MongoDB.
     
     Returns:
-        ObjectId or None: User ID if logged in, None otherwise
+        ObjectId or None: User ID if logged in, demo ID if no MongoDB, None otherwise
     """
     user_id_str = st.session_state.get('user_id')
     if user_id_str:
         return ObjectId(user_id_str)
+    
+    # Return demo user ID when MongoDB is unavailable
+    if not st.session_state.get('mongodb_available', True):
+        return ObjectId('000000000000000000000000')  # Demo user ID
+    
     return None
 
 
