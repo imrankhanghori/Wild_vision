@@ -13,18 +13,18 @@ import config
 def get_mongo_client():
     """
     Create and cache MongoDB client connection.
-    Silently returns None if connection fails (allows app to run without DB).
     
     Returns:
-        MongoClient: MongoDB client instance or None if connection fails
+        MongoClient: MongoDB client instance
     """
     try:
         client = MongoClient(config.MONGO_URI, serverSelectionTimeoutMS=5000)
         # Test connection
         client.admin.command('ping')
         return client
-    except (ConnectionFailure, Exception):
-        # Silently fail - app will handle this gracefully
+    except ConnectionFailure as e:
+        st.error(f"Failed to connect to MongoDB: {e}")
+        st.warning("Please ensure MongoDB is running on localhost:27017")
         return None
 
 
@@ -93,7 +93,6 @@ def initialize_database():
 def test_connection():
     """
     Test MongoDB connection and return status.
-    Silently returns False if connection fails.
     
     Returns:
         bool: True if connection successful, False otherwise
@@ -113,8 +112,8 @@ def test_connection():
         
         return True
     
-    except Exception:
-        # Silently fail
+    except Exception as e:
+        st.error(f"MongoDB connection test failed: {e}")
         return False
 
 

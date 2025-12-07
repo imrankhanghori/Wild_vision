@@ -158,8 +158,8 @@ def draw_boxes(image, detections, show_confidence=True):
         # Get class-specific color (BGR format)
         color = config.CLASS_COLORS.get(class_name, (0, 255, 0))
         
-        # Draw bounding box
-        thickness = 3
+        # Draw bounding box (THICKER for better visibility)
+        thickness = 6
         cv2.rectangle(output_image, (x1, y1), (x2, y2), color, thickness)
         
         # Prepare label text
@@ -168,10 +168,10 @@ def draw_boxes(image, detections, show_confidence=True):
         else:
             label = f"{class_name}"
         
-        # Calculate label background size
+        # Calculate label background size (BIGGER text for better visibility)
         font = cv2.FONT_HERSHEY_SIMPLEX
-        font_scale = 0.7
-        font_thickness = 2
+        font_scale = 1.2
+        font_thickness = 3
         (text_width, text_height), baseline = cv2.getTextSize(
             label, font, font_scale, font_thickness
         )

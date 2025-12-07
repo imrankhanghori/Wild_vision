@@ -4,78 +4,21 @@ Modern AdminLTE-inspired upload interface
 """
 
 import streamlit as st
-
-# Try to import image processing dependencies
-try:
-    import cv2
-    import numpy as np
-    from PIL import Image
-    from datetime import datetime
-    import config
-    from utils.yolo_detector import draw_boxes
-    from utils.verification import verify_detection_2layer
-    from database.user_manager import get_current_user_id
-    from database.detection_manager import save_detection
-    from alerts.email_service import send_alert_if_ready
-    from ui.styles import format_confidence, create_species_badge, create_confidence_bar
-    UPLOAD_AVAILABLE = True
-except ImportError as e:
-    UPLOAD_AVAILABLE = False
-    IMPORT_ERROR = str(e)
+import cv2
+import numpy as np
+from PIL import Image
+from datetime import datetime
+import config
+from utils.yolo_detector import draw_boxes
+from utils.verification import verify_detection_2layer
+from database.user_manager import get_current_user_id
+from database.detection_manager import save_detection
+from alerts.email_service import send_alert_if_ready
+from ui.styles import format_confidence, create_species_badge, create_confidence_bar
 
 
 def show_upload_page():
     """Display modern image upload page with AdminLTE-inspired design."""
-    
-    # Check if image processing dependencies are available
-    if not UPLOAD_AVAILABLE:
-        st.markdown("""
-        <div style="
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.05) 100%);
-            border: 2px solid rgba(239, 68, 68, 0.3);
-            border-radius: 12px;
-            padding: 40px;
-            text-align: center;
-            margin: 40px 0;
-        ">
-            <div style="font-size: 80px; margin-bottom: 20px;">📤❌</div>
-            <h2 style="
-                font-size: 2rem; 
-                font-weight: 800; 
-                color: #ef4444;
-                margin-bottom: 16px;
-            ">Image Upload Not Available</h2>
-            <p style="
-                font-size: 1.125rem; 
-                color: var(--text-secondary);
-                margin-bottom: 24px;
-                line-height: 1.6;
-            ">
-                This feature requires OpenCV and image processing libraries that are not available on Streamlit Cloud.<br>
-                To use this feature, please run the application on your local computer.
-            </p>
-            <div style="
-                background: rgba(0, 0, 0, 0.2);
-                border-radius: 8px;
-                padding: 16px;
-                margin-top: 20px;
-            ">
-                <p style="
-                    color: var(--text-muted);
-                    font-size: 0.875rem;
-                    margin: 0;
-                ">
-                    💡 <strong>How to run locally:</strong><br>
-                    1. Clone this repository<br>
-                    2. Install dependencies: <code style="background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px;">pip install -r requirements.txt</code><br>
-                    3. Run: <code style="background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px;">streamlit run app.py</code>
-                </p>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.warning("⚠️ This application is designed to run locally with full hardware access for wildlife detection.")
-        return
     
     user_id = get_current_user_id()
     
